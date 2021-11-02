@@ -3,13 +3,13 @@ import { BadRequest, Forbidden } from '../utils/Errors'
 
 class HousesService {
   async getAll(query = {}) {
-    const houses = await dbContext.Houses.find(query)
+    const houses = await dbContext.Houses.find(query).populate('creator', 'name picture')
     return houses
   }
 
   // REVIEW not totally confident on how to use populate on houses. Will try to use later
   async create(body) {
-    const house = await dbContext.Houses.create(body)
+    const house = await dbContext.Houses.create(body).populate('creator', 'name picture')
     return house
   }
 
