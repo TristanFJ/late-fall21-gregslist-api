@@ -29,6 +29,14 @@ class HousesService {
     const update = dbContext.Houses.findOneAndUpdate({ _id: body.id, creatorId: body.creatorId }, body, { new: true })
     return update
   }
+
+  async remove(houseId, userId) {
+    const house = await this.getById(houseId)
+    if (house.creatorId.toString() !== userId) {
+      throw new Forbidden('access denied')
+    }
+    await dbContext.Houses.findByIdAndDelete(houseId)
+  }
 }
 
 export const housesService = new HousesService()

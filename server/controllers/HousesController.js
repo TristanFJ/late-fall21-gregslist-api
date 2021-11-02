@@ -11,6 +11,7 @@ export class HousesController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.create)
       .put('/:id', this.edit)
+      .delete('/:id', this.remove)
   }
 
   async getAll(req, res, next) {
@@ -48,6 +49,17 @@ export class HousesController extends BaseController {
       req.body.id = req.params.id
       const house = await housesService.edit(req.body)
       return res.send(house)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async remove(req, res, next) {
+    try {
+      const userId = req.userInfo.id
+      const houseId = req.params.id
+      await housesService.remove(houseId, userId)
+      res.send('Delete successful')
     } catch (error) {
       next(error)
     }
