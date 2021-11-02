@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import { AccountSchema, ProfileSchema } from '../models/Account'
 import { CarSchema } from '../models/Car'
 import { HouseSchema } from '../models/House'
+import { JobSchema } from "../models/Job"
 import { ValueSchema } from '../models/Value'
 
 class DbContext {
@@ -10,6 +11,8 @@ class DbContext {
   Cars = mongoose.model('Car', CarSchema);
 
   Houses = mongoose.model('House', HouseSchema);
+
+  Jobs = mongoose.model('Job', JobSchema)
   // Profiles is the same collection as account and therefore acts as a 'reducer'
   Profiles = mongoose.model('Profile', ProfileSchema, 'accounts');
 }
