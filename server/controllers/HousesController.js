@@ -7,6 +7,8 @@ export class HousesController extends BaseController {
     super('api/houses')
     this.router
       .get('', this.getAll)
+      .use(Auth0Provider.getAuthorizedUserInfo)
+      .post('', this.create)
   }
 
   async getAll(req, res, next) {
@@ -14,6 +16,16 @@ export class HousesController extends BaseController {
       const query = req.query
       const houses = await housesService.getAll(query)
       return res.send(houses)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async create(req, res, next) {
+    try {
+      req.body.creatorId = req.userInfo.id
+      const house = await housesService.create(req.body)
+      return res.send(house)
     } catch (error) {
       next(error)
     }
