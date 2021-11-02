@@ -19,6 +19,23 @@ class JobsService {
     const job = await dbContext.Jobs.create(body)
     return job
   }
+
+  async edit(body) {
+    const job = await this.getById(body.id)
+    if (job.creatorId.toString() !== body.creatorId) {
+      throw new Forbidden('access denied')
+    }
+    const update = dbContext.Jobs.findOneAndUpdate({ _id: body.id, creatorId: body.creatorId }, body, { new: true })
+    return update
+  }
+
+  async remove(carId, userId) {
+    const job = await this.getById(carId)
+    if (job.creatorId.toString() !== userId) {
+      throw new Forbidden('access denied')
+    }
+    await dbContext.Jobs.findByIdAndDelete(carId)
+  }
 }
 
 export const jobsService = new JobsService()

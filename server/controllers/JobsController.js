@@ -10,6 +10,8 @@ export class JobsController extends BaseController {
       .get('/:id', this.getById)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.create)
+      .put('/:id', this.edit)
+      .delete('/:id', this.remove)
   }
 
   async getAll(req, res, next) {
@@ -36,6 +38,28 @@ export class JobsController extends BaseController {
       req.body.creatorId = req.userInfo.id
       const job = await jobsService.create(req.body)
       return res.send(job)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async edit(req, res, next) {
+    try {
+      req.body.creatorId = req.userInfo.id
+      req.body.id = req.params.id
+      const job = await jobsService.edit(req.body)
+      return res.send(job)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async remove(req, res, next) {
+    try {
+      const userId = req.userInfo.id
+      const carId = req.params.id
+      await jobsService.remove(carId, userId)
+      res.send('Delete successful')
     } catch (error) {
       next(error)
     }
