@@ -20,6 +20,15 @@ class HousesService {
     }
     return house
   }
+
+  async edit(body) {
+    const house = await this.getById(body.id)
+    if (house.creatorId.toString() !== body.creatorId) {
+      throw new Forbidden('access denied')
+    }
+    const update = dbContext.Houses.findOneAndUpdate({ _id: body.id, creatorId: body.creatorId }, body, { new: true })
+    return update
+  }
 }
 
 export const housesService = new HousesService()
