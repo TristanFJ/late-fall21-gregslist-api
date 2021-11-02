@@ -7,17 +7,16 @@ class HousesService {
     return houses
   }
 
-  // REVIEW not totally confident on how to use populate on houses. Will try to use later
-  async create(body) {
-    const house = await dbContext.Houses.create(body).populate('creator', 'name picture')
-    return house
-  }
-
   async getById(id) {
-    const house = await dbContext.Houses.findById(id)
+    const house = await dbContext.Houses.findById(id).populate('creator', 'name picture')
     if (!house) {
       throw new BadRequest('invalid house id')
     }
+    return house
+  }
+
+  async create(body) {
+    const house = await dbContext.Houses.create(body)
     return house
   }
 
